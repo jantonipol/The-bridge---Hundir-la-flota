@@ -14,31 +14,111 @@ tablero_usuario1_disparos = crear_tablero()
 tablero_usuario2 = crear_tablero()
 tablero_usuario2_disparos = crear_tablero()
 
-# barcos añadido de forma fija
+# barcos añadido de forma aleatoria
+def poner_barco(eslora, numero_barco, tablero_jugador):
+    eslora = eslora
+    numero_barco = numero_barco
+    tablero_usuario1 = tablero_jugador
+    tablero_usuario2 = tablero_jugador
+
+    while True:
+        # Orientacion aleatoria
+
+        orient = random.choice(["N", "S", "E", "O"])
+
+        # Posicion inicial del barco
+
+        current_pos = np.random.randint(10, size=2)
+        fila = current_pos[0]
+        col = current_pos[1]
+
+        # Recogemos las 4 posiciones candidatas
+        coors_posIN = tablero_usuario1[fila:fila - eslora: -1,
+                      col]  # fila-eslora por que va hacia el norte. Hacia el sur seria fila+eslora
+
+        coors_posIE = tablero_usuario1[fila, col:col + eslora]
+
+        coors_posIS = tablero_usuario1[fila:fila + eslora, col]
+
+        coors_posIO = tablero_usuario1[fila, col: col - eslora:-1]
+        # Compruebo norte
+        if (orient == "N") and len(coors_posIN) == eslora and ("O" not in coors_posIN):
+            tablero_usuario1[fila:fila - eslora:-1, col] = "O"
+            break
+
+        # Compruebo este
+
+        if (orient == "E") and len(coors_posIE) == eslora and ("O") not in coors_posIE:
+            tablero_usuario1[fila, col:col + eslora] = "O"
+
+        # compruebo Sur
+
+        if (orient == "S") and len(coors_posIE) == eslora and ("O") not in coors_posIS:
+            tablero_usuario1[fila:fila + eslora, col] = "O"
+        # Compruebo O
+        if (orient == "O") and len(coors_posIE) == eslora and ("O") not in coors_posIO:
+            tablero_usuario1[fila, col: col - eslora:-1]
+
+    return eslora, numero_barco
+
+
+def poner_barco2(eslora, numero_barco, tablero_jugador2):
+    eslora = eslora
+    numero_barco = numero_barco
+
+    tablero_usuario2 = tablero_jugador2
+
+    while True:
+        # Orientacion aleatoria
+
+        orient = random.choice(["N", "S", "E", "O"])
+
+        # Posicion inicial del barco
+
+        current_pos = np.random.randint(10, size=2)
+        fila = current_pos[0]
+        col = current_pos[1]
+
+        # Recogemos las 4 posiciones candidatas
+        coors_posIN = tablero_usuario2[fila:fila - eslora: -1,
+                      col]  # fila-eslora por que va hacia el norte. Hacia el sur seria fila+eslora
+
+        coors_posIE = tablero_usuario2[fila, col:col + eslora]
+
+        coors_posIS = tablero_usuario2[fila:fila + eslora, col]
+
+        coors_posIO = tablero_usuario2[fila, col: col - eslora:-1]
+        # Compruebo norte
+        if (orient == "N") and len(coors_posIN) == eslora and ("O" not in coors_posIN):
+            tablero_usuario1[fila:fila - eslora:-1, col] = "O"
+            break
+
+        # Compruebo este
+
+        if (orient == "E") and len(coors_posIE) == eslora and ("O") not in coors_posIE:
+            tablero_usuario2[fila, col:col + eslora] = "O"
+
+        # compruebo Sur
+
+        if (orient == "S") and len(coors_posIE) == eslora and ("O") not in coors_posIS:
+            tablero_usuario2[fila:fila + eslora, col] = "O"
+        # Compruebo O
+        if (orient == "O") and len(coors_posIE) == eslora and ("O") not in coors_posIO:
+            tablero_usuario2[fila, col: col - eslora:-1]
+
+    return eslora, numero_barco
 
 # barcos jugador1
-tablero_usuario1[(0, 1)] = "O"
-tablero_usuario1[(0, 3)] = "O"
-tablero_usuario1[(0, 5)] = "O"
-tablero_usuario1[(8, 1)] = "O"
-tablero_usuario1[3][1:3] = "O"
-tablero_usuario1[5][1:3] = "O"
-tablero_usuario1[5][7:10] = "O"
-tablero_usuario1[7][5:8] = "O"
-tablero_usuario1[0][8:10] = "O"
-tablero_usuario1[1][3:7] = "O"
+tablero_usuario1[poner_barco(4,1, tablero_usuario1)] = "O"
+tablero_usuario1[poner_barco(3,2, tablero_usuario1)] = "O"
+tablero_usuario1[poner_barco(2,3, tablero_usuario1)] = "O"
+tablero_usuario1[poner_barco(1,4, tablero_usuario1)] = "O"
 
 # barcos jugador2
-tablero_usuario2[(4, 1)] = "O"
-tablero_usuario2[(3, 5)] = "O"
-tablero_usuario2[(3, 7)] = "O"
-tablero_usuario2[(9, 0)] = "O"
-tablero_usuario2[5][3:5] = "O"
-tablero_usuario2[7][3:5] = "O"
-tablero_usuario2[7][7:9] = "O"
-tablero_usuario2[0][1:4] = "O"
-tablero_usuario2[2][1:4] = "O"
-tablero_usuario2[1][3:7] = "O"
+tablero_usuario2[poner_barco2(4,1, tablero_usuario2)] = "O"
+tablero_usuario2[poner_barco2(3,2, tablero_usuario2)] = "O"
+tablero_usuario2[poner_barco2(2,3, tablero_usuario2)] = "O"
+tablero_usuario2[poner_barco2(1,4, tablero_usuario2)] = "O"
 
 #contadores de disparos acertados de cada jugador. El contador_1 para el usuario y el contador_2 para el ordenador
 contador_1 = 0
@@ -105,3 +185,5 @@ if contador_1 > contador_2:
     print("Has ganado al ordenador! Enhorabuena!!")
 elif contador_2 > contador_1:
     print("Has perdido! El ordenador te ha vencido")
+
+
